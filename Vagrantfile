@@ -78,10 +78,74 @@ Vagrant.configure(2) do |config|
     sudo apt-get install -y build-essential
     sudo apt-get install -y git
     sudo apt-get install -y cmake
-    # sudo apt-get install -y python
-    # apt-get install -y python
-    # apt-get install -y python-pip
-    # apt-get install -y python-virtualenv
-    # sudo apt-get install -y python-pip
+    sudo apt-get install -y unzip
+
+    # install cpputest package instead of building it
+    sudo apt-get install -y cpputest
+
+    # add environment variables if not added
+    if ! grep -q "GMOCK_HOME" /home/vagrant/.profile; then
+      echo "" >> /home/vagrant/.profile
+      echo "# set Google Mock home" >> /home/vagrant/.profile
+      echo "export GMOCK_HOME=~/tools/gmock-1.6.0" >> /home/vagrant/.profile
+    fi
+
+#    if ! grep -q "CPPUTEST_HOME" /home/vagrant/.profile; then
+#      echo "" >> /home/vagrant/.profile
+#      echo "# set CppUTest home" >> /home/vagrant/.profile
+#      echo "export CPPUTEST_HOME=~/tools/cpputest-3.3" >> /home/vagrant/.profile
+#    fi
+
   SHELL
+
+  # provisioning with a non-privileged shell script i.e. as vagrant user
+  $script = <<-SCRIPT
+    # create temp directory
+    if [ ! -d ~/temp ] 
+    then
+      mkdir ~/temp
+    fi
+    # create tools directory
+    if [ ! -d ~/tools ] 
+    then
+      mkdir ~/tools
+    fi
+
+    # download Google Mock v1.6.0
+    if [ ! -f ~/temp/gmock-1.6.0.zip ]
+    then
+      wget -q -P ~/temp https://googlemock.googlecode.com/files/gmock-1.6.0.zip
+    fi
+
+    # unzip Google Mock under tools directory
+    if [ ! -d ${GMOCK_HOME} ]
+    then
+      unzip -d ~/tools ~/temp/gmock-1.6.0.zip
+    fi
+
+    # build Google Mock
+    if [ ! -d ${GMOCK_HOME}/mybuild ]
+    then
+      mkdir ${GMOCK_HOME}/mybuild
+      
+      cd ${GMOCK_HOME}/mybuild
+      cmake ..
+      make
+    fi
+
+    # build Google Test
+    if [ ! -d ${GMOCK_HOME}/gtest/mybuild ]
+    then
+      mkdir ${GMOCK_HOME}/gtest/mybuild
+
+      cd ${GMOCK_HOME}/gtest/mybuild
+      cmake ..
+      make
+    fi
+
+
+  SCRIPT
+
+  config.vm.provision "shell", inline: $script, privileged: false
+
 end
