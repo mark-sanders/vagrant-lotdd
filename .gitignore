@@ -1,1 +1,4 @@
 /.vagrant
+mybuild
+/*.sublime-project
+/*.sublime-workspace
