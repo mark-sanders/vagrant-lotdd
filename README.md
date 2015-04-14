@@ -1,7 +1,7 @@
 # vagrant-lotdd
-Vagrant based development environment for C++ test-driven development.
+Vagrant-based development environment for C++ test-driven development.
 
-See [Modern C++ Programming](https://pragprog.com/book/lotdd/modern-c-programming-with-test-driven-development) by Jeff Langr
+See [Modern C++ Programming](https://pragprog.com/book/lotdd/modern-c-programming-with-test-driven-development) by Jeff Langr.
 
 Just using Vagrant shell provision, and assuming we're in a Windows environment.
 
