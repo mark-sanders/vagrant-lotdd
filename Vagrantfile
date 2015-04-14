@@ -18,9 +18,15 @@ Vagrant.configure(2) do |config|
   # DOESN'T ALREADY EXIST ON THE USER'S SYSTEM.
   config.vm.box_url = "http://cloud-images.ubuntu.com/vagrant/trusty/current/trusty-server-cloudimg-amd64-vagrant-disk1.box"
 
-  config.proxy.http     = "http://85.115.60.150:8089"
-  config.proxy.https    = "http://85.115.60.150:8089"
-  config.proxy.no_proxy = "localhost,127.0.0.1"
+  if Vagrant.has_plugin?("vagrant-timezone")
+    config.timezone.value = "Europe/London"
+  end
+
+  if Vagrant.has_plugin?("vagrant-proxyconf")
+    config.proxy.http     = "http://85.115.60.150:8089"
+    config.proxy.https    = "http://85.115.60.150:8089"
+    config.proxy.no_proxy = "localhost,127.0.0.1"
+  end
 
   # Disable automatic box update checking. If you disable this, then
   # boxes will only be checked for updates when the user runs
