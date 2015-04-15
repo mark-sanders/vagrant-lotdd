@@ -22,12 +22,6 @@ Vagrant.configure(2) do |config|
     config.timezone.value = "Europe/London"
   end
 
-  if Vagrant.has_plugin?("vagrant-proxyconf")
-    config.proxy.http     = "http://85.115.60.150:8089"
-    config.proxy.https    = "http://85.115.60.150:8089"
-    config.proxy.no_proxy = "localhost,127.0.0.1"
-  end
-
   # Disable automatic box update checking. If you disable this, then
   # boxes will only be checked for updates when the user runs
   # `vagrant box outdated`. This is not recommended.
@@ -93,32 +87,46 @@ Vagrant.configure(2) do |config|
 
   # provisioning with a non-privileged shell script i.e. as vagrant user
   $script = <<-SCRIPT
+
+    # link to projects directory
+    if [ ! -L ~/projects ]
+    then
+      echo "Creating link to /vagrant/projects"
+      ln -s /vagrant/projects ~/projects
+    fi
+
     # create temp directory
     if [ ! -d ~/temp ] 
     then
+      echo "Creating ~/temp"
       mkdir ~/temp
     fi
+
     # create tools directory
     if [ ! -d ~/tools ] 
     then
+      echo "Creating ~/tools"
       mkdir ~/tools
     fi
 
     # download Google Mock v1.6.0
     if [ ! -f ~/temp/gmock-1.6.0.zip ]
     then
+      echo "Downloading Google Mock v1.6.0"
       wget -q -P ~/temp https://googlemock.googlecode.com/files/gmock-1.6.0.zip
     fi
 
     # unzip Google Mock under tools directory
     if [ ! -d ${GMOCK_HOME} ]
     then
+      echo "Unzipping Google Mock v1.6.0"
       unzip -d ~/tools ~/temp/gmock-1.6.0.zip
     fi
 
     # build Google Mock
     if [ ! -d ${GMOCK_HOME}/mybuild ]
     then
+      echo "Building Google Mock v1.6.0"
       mkdir ${GMOCK_HOME}/mybuild
       
       cd ${GMOCK_HOME}/mybuild
@@ -129,6 +137,7 @@ Vagrant.configure(2) do |config|
     # build Google Test
     if [ ! -d ${GMOCK_HOME}/gtest/mybuild ]
     then
+      echo "Building Google Test v1.6.0"
       mkdir ${GMOCK_HOME}/gtest/mybuild
 
       cd ${GMOCK_HOME}/gtest/mybuild
