@@ -17,14 +17,18 @@ private:
 
     std::string encodeDigits(const std::string& word) const {
         if (word.length() > 1) {
-            return encodeDigit();
+            return encodeDigit(word[1]);
         } else {
             return "";
         }
     }
 
-    std::string encodeDigit() const {
-        return "1";
+    std::string encodeDigit(char letter) const {
+        if (letter == 'c' || letter == 'g') {
+            return "2";
+        } else {
+            return "1";
+        }
     }
 
     std::string zeroPad(const std::string& word) const {
