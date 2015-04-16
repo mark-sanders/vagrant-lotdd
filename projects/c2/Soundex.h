@@ -8,18 +8,21 @@ class Soundex
 {
 public:
     std::string encode(const std::string& word) const {
-        return zeroPad(head(word) + encodeDigits(word));
+        if (word.empty()) {
+            return "";
+        } else {
+            return zeroPad(head(word) + encodeDigits(word));
+        }
     }
 
 private:
-    static const size_t MAX_ENCODED_DIGITS { 3 };
-    static const size_t MAX_CODE_LENGTH { 1 + MAX_ENCODED_DIGITS };
-    static const std::map<char, const std::string> CHAR_TO_DIGIT_MAP;
+    static const size_t MaxEncodedDigits { 3 };
+    static const size_t MaxDigitsLength { 1 + MaxEncodedDigits };
+    static const std::map<char, const std::string> CharToDigitMap;
 
     std::string head(const std::string& word) const {
         char c = ::toupper(word[0]);
         std::string head(1, c);
-        // std::cout << head << std::endl;
         return head;
     }
 
@@ -28,13 +31,12 @@ private:
         auto iter = word.begin();
         std::string lastDigit = encodeDigit(*iter++);
 
-        for (; iter != word.end() && digits.length() < MAX_ENCODED_DIGITS; iter++) {
-            std::string digit = encodeDigit(*iter);
-            // std::cout << "digit: " << digit << std::endl;
+        while (iter != word.end() && digits.length() < MaxEncodedDigits) {
+
+            std::string digit = encodeDigit(*iter++);
             
             if (!digit.empty() && digit != "-" && digit != lastDigit) {
                 digits += digit;
-                // std::cout << "digits: " << digits << std::endl;
             }
             
             if (digit != "-") {
@@ -46,9 +48,9 @@ private:
     }
 
     std::string encodeDigit(char letter) const {
-        auto it = CHAR_TO_DIGIT_MAP.find(::tolower(letter));
+        auto it = CharToDigitMap.find(::tolower(letter));
 
-        if (it == CHAR_TO_DIGIT_MAP.end()) {
+        if (it == CharToDigitMap.end()) {
             return "";
         } else {
             return it->second;
@@ -56,7 +58,7 @@ private:
     }
 
     std::string zeroPad(const std::string& encoded) const {
-        auto zerosNeeded = MAX_CODE_LENGTH - encoded.length();
+        auto zerosNeeded = MaxDigitsLength - encoded.length();
         return encoded + std::string(zerosNeeded, '0');
     }
 };

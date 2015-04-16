@@ -107,3 +107,9 @@ TEST_F(SoundexEncoding, Examples)
     EXPECT_THAT(soundex.encode("Robert"), Eq("R163"));
     EXPECT_THAT(soundex.encode("Rupert"), Eq("R163"));
 }
+
+
+TEST_F(SoundexEncoding, EmptyStringEncodesAsEmptyString)
+{
+    EXPECT_THAT(soundex.encode(""), Eq(""));
+}
