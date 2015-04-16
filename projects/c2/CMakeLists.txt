@@ -8,7 +8,8 @@ set(CMAKE_CXX_FLAGS "${CMAXE_CXX_FLAGS} -Wall -pthread")
 
 set(sources 
    main.cpp 
-   SoundexTest.cpp)
+   SoundexTest.cpp
+   Soundex.cpp)
 add_executable(test ${sources})
 target_link_libraries(test pthread)
 target_link_libraries(test gmock)
