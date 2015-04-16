@@ -25,5 +25,14 @@ TEST_F(SoundexEncoding, ReplacesConsonantsWithAppropriateDigits)
 
     EXPECT_THAT(soundex.encode("Ac"), Eq("A200"));
     EXPECT_THAT(soundex.encode("Ag"), Eq("A200"));
+
+    EXPECT_THAT(soundex.encode("Ad"), Eq("A300"));
+    EXPECT_THAT(soundex.encode("At"), Eq("A300"));
     
+    EXPECT_THAT(soundex.encode("Al"), Eq("A400"));
+
+    EXPECT_THAT(soundex.encode("Am"), Eq("A500"));
+    EXPECT_THAT(soundex.encode("An"), Eq("A500"));
+
+    EXPECT_THAT(soundex.encode("Ar"), Eq("A600"));
 }
