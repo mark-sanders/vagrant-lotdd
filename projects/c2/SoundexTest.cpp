@@ -36,3 +36,18 @@ TEST_F(SoundexEncoding, ReplacesConsonantsWithAppropriateDigits)
 
     EXPECT_THAT(soundex.encode("Ar"), Eq("A600"));
 }
+
+TEST_F(SoundexEncoding, ReplacesMultipleConsonantsWithAppropriateDigits)
+{
+    EXPECT_THAT(soundex.encode("Abc"), Eq("A120"));
+    EXPECT_THAT(soundex.encode("Abcd"), Eq("A123"));
+    EXPECT_THAT(soundex.encode("Atl"), Eq("A340"));
+
+    EXPECT_THAT(soundex.encode("Abcdl"), Eq("A123"));
+}
+
+TEST_F(SoundexEncoding, ReplacesMultipleConsonantsWithUpToThreeDigits)
+{
+    EXPECT_THAT(soundex.encode("Abcdl"), Eq("A123"));
+    EXPECT_THAT(soundex.encode("Abcdlm"), Eq("A123"));
+}

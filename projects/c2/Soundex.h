@@ -16,11 +16,13 @@ private:
     }
 
     std::string encodeDigits(const std::string& word) const {
-        if (word.length() > 1) {
-            return encodeDigit(word[1]);
-        } else {
-            return "";
+        std::string digits;
+
+        for (auto iter = word.begin() + 1; iter != word.end() && digits.length() < 3; iter++) {
+            digits += encodeDigit(*iter);
         }
+
+        return digits;
     }
 
     //  Replace consonants with digits as follows (after the first letter):
@@ -48,8 +50,8 @@ private:
         }
     }
 
-    std::string zeroPad(const std::string& word) const {
-        auto zerosNeeded = MAX_CODE_LENGTH - word.length();
-        return word + std::string(zerosNeeded, '0');
+    std::string zeroPad(const std::string& encoded) const {
+        auto zerosNeeded = MAX_CODE_LENGTH - encoded.length();
+        return encoded + std::string(zerosNeeded, '0');
     }
 };
