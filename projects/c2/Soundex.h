@@ -19,9 +19,13 @@ private:
 
     std::string encodeDigits(const std::string& word) const {
         std::string digits;
-
+        std::string last = "";
         for (auto iter = word.begin() + 1; iter != word.end() && digits.length() < MAX_ENCODED_DIGITS; iter++) {
-            digits += encodeDigit(*iter);
+            std::string digit = encodeDigit(*iter);
+            if (digit != last) {
+                digits += digit;
+                last = digit;
+            }
         }
 
         return digits;

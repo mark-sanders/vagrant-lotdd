@@ -51,3 +51,26 @@ TEST_F(SoundexEncoding, ReplacesMultipleConsonantsWithUpToThreeDigits)
     EXPECT_THAT(soundex.encode("Abcdl"), Eq("A123"));
     EXPECT_THAT(soundex.encode("Abcdlm"), Eq("A123"));
 }
+
+TEST_F(SoundexEncoding, DropVowelLikeLettersBeyondFirst)
+{
+    EXPECT_THAT(soundex.encode("Aar"), Eq("A600"));
+    EXPECT_THAT(soundex.encode("Far"), Eq("F600"));
+}
+
+TEST_F(SoundexEncoding, TwoAdjacentConsonantsWithSameEncodingAreElided)
+{
+    EXPECT_THAT(soundex.encode("Agg"), Eq("A200"));
+    EXPECT_THAT(soundex.encode("Arr"), Eq("A600"));
+}
+
+TEST_F(SoundexEncoding, TwoNonAdjacentConsonantsWithSameEncodingAreNotElided)
+{
+    EXPECT_THAT(soundex.encode("Agog"), Eq("A220"));
+}
+
+TEST_F(SoundexEncoding, ThreeAdjacentConsonantsWithSameEncodingAreElided)
+{
+    EXPECT_THAT(soundex.encode("Arrr"), Eq("A600"));
+    EXPECT_THAT(soundex.encode("Acks"), Eq("A200"));
+}
