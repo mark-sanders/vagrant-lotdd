@@ -1,5 +1,8 @@
+#include <algorithm>
 #include <string>
 #include <map>
+
+// #include <iostream>
 
 class Soundex 
 {
@@ -14,17 +17,28 @@ private:
     static const std::map<char, const std::string> CHAR_TO_DIGIT_MAP;
 
     std::string head(const std::string& word) const {
-        return word.substr(0, 1);
+        char c = ::toupper(word[0]);
+        std::string head(1, c);
+        // std::cout << head << std::endl;
+        return head;
     }
 
     std::string encodeDigits(const std::string& word) const {
         std::string digits;
-        std::string last = "";
-        for (auto iter = word.begin() + 1; iter != word.end() && digits.length() < MAX_ENCODED_DIGITS; iter++) {
+        auto iter = word.begin();
+        std::string lastDigit = encodeDigit(*iter++);
+
+        for (; iter != word.end() && digits.length() < MAX_ENCODED_DIGITS; iter++) {
             std::string digit = encodeDigit(*iter);
-            if (digit != last) {
+            // std::cout << "digit: " << digit << std::endl;
+            
+            if (!digit.empty() && digit != "-" && digit != lastDigit) {
                 digits += digit;
-                last = digit;
+                // std::cout << "digits: " << digits << std::endl;
+            }
+            
+            if (digit != "-") {
+                lastDigit = digit;
             }
         }
 
@@ -32,7 +46,7 @@ private:
     }
 
     std::string encodeDigit(char letter) const {
-        auto it = CHAR_TO_DIGIT_MAP.find(letter);
+        auto it = CHAR_TO_DIGIT_MAP.find(::tolower(letter));
 
         if (it == CHAR_TO_DIGIT_MAP.end()) {
             return "";

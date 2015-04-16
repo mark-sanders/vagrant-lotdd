@@ -13,7 +13,7 @@ TEST_F(SoundexEncoding, RetainsSoleLetterOfOneLetterWord)
     ASSERT_THAT(soundex.encode("A"), Eq("A000"));
 }
 
-TEST_F(SoundexEncoding, PadsWithZerosToEnsureThreeDigist)
+TEST_F(SoundexEncoding, PadsWithZerosToEnsureThreeDigits)
 {
     ASSERT_THAT(soundex.encode("I"), Eq("I000"));
 }
@@ -23,18 +23,18 @@ TEST_F(SoundexEncoding, ReplacesConsonantsWithAppropriateDigits)
     EXPECT_THAT(soundex.encode("Ab"), Eq("A100"));
     EXPECT_THAT(soundex.encode("Ap"), Eq("A100"));
 
-    EXPECT_THAT(soundex.encode("Ac"), Eq("A200"));
-    EXPECT_THAT(soundex.encode("Ag"), Eq("A200"));
+    EXPECT_THAT(soundex.encode("ac"), Eq("A200"));
+    EXPECT_THAT(soundex.encode("ag"), Eq("A200"));
 
-    EXPECT_THAT(soundex.encode("Ad"), Eq("A300"));
-    EXPECT_THAT(soundex.encode("At"), Eq("A300"));
+    EXPECT_THAT(soundex.encode("AD"), Eq("A300"));
+    EXPECT_THAT(soundex.encode("AT"), Eq("A300"));
     
-    EXPECT_THAT(soundex.encode("Al"), Eq("A400"));
+    EXPECT_THAT(soundex.encode("al"), Eq("A400"));
 
-    EXPECT_THAT(soundex.encode("Am"), Eq("A500"));
-    EXPECT_THAT(soundex.encode("An"), Eq("A500"));
+    EXPECT_THAT(soundex.encode("aM"), Eq("A500"));
+    EXPECT_THAT(soundex.encode("an"), Eq("A500"));
 
-    EXPECT_THAT(soundex.encode("Ar"), Eq("A600"));
+    EXPECT_THAT(soundex.encode("AR"), Eq("A600"));
 }
 
 TEST_F(SoundexEncoding, ReplacesMultipleConsonantsWithAppropriateDigits)
@@ -64,13 +64,46 @@ TEST_F(SoundexEncoding, TwoAdjacentConsonantsWithSameEncodingAreElided)
     EXPECT_THAT(soundex.encode("Arr"), Eq("A600"));
 }
 
-TEST_F(SoundexEncoding, TwoNonAdjacentConsonantsWithSameEncodingAreNotElided)
+TEST_F(SoundexEncoding, TwoAdjacentConsonantsWithSameEncodingAreElidedEvenWhenIntial)
 {
-    EXPECT_THAT(soundex.encode("Agog"), Eq("A220"));
+    EXPECT_THAT(soundex.encode("Pfister"), Eq("P236"));
+
 }
 
 TEST_F(SoundexEncoding, ThreeAdjacentConsonantsWithSameEncodingAreElided)
 {
     EXPECT_THAT(soundex.encode("Arrr"), Eq("A600"));
     EXPECT_THAT(soundex.encode("Acks"), Eq("A200"));
+}
+
+TEST_F(SoundexEncoding, TwoConsonantsSeparatedByVowelAreNotElided)
+{
+    EXPECT_THAT(soundex.encode("Agog"), Eq("A220"));
+    EXPECT_THAT(soundex.encode("Stat"), Eq("S330"));
+    EXPECT_THAT(soundex.encode("Tymczak"), Eq("T522"));
+
+    EXPECT_THAT(soundex.encode("Gog"), Eq("G200"));
+    EXPECT_THAT(soundex.encode("Cac"), Eq("C200"));
+}
+
+TEST_F(SoundexEncoding, TwoConsonantsSeparatedBy_H_Or_W_AreElided)
+{
+    EXPECT_THAT(soundex.encode("Aghg"), Eq("A200"));
+    EXPECT_THAT(soundex.encode("Agwg"), Eq("A200"));
+
+    EXPECT_THAT(soundex.encode("Ashcroft"), Eq("A261"));
+    EXPECT_THAT(soundex.encode("Ashcraft"), Eq("A261"));
+}
+
+TEST_F(SoundexEncoding, TwoConsonantsSeparatedBy_H_Or_W_AreElidedIncludingInitial)
+{
+    EXPECT_THAT(soundex.encode("Ghg"), Eq("G000"));
+    EXPECT_THAT(soundex.encode("Cwc"), Eq("C000"));
+}
+
+
+TEST_F(SoundexEncoding, Examples)
+{
+    EXPECT_THAT(soundex.encode("Robert"), Eq("R163"));
+    EXPECT_THAT(soundex.encode("Rupert"), Eq("R163"));
 }

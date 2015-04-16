@@ -14,4 +14,5 @@ const std::map<char, const std::string> Soundex::CHAR_TO_DIGIT_MAP {
     { 'l', "4" },
     { 'm', "5" }, { 'n', "5" },
     { 'r', "6" },
+    { 'h', "-" }, { 'w', "-" },
 };
