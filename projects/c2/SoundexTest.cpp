@@ -48,32 +48,32 @@ TEST_F(SoundexEncoding, ReplacesMultipleConsonantsWithAppropriateDigits)
 
 TEST_F(SoundexEncoding, ReplacesMultipleConsonantsWithUpToThreeDigits)
 {
-    EXPECT_THAT(soundex.encode("Abcdl"), Eq("A123"));
-    EXPECT_THAT(soundex.encode("Abcdlm"), Eq("A123"));
+    ASSERT_THAT(soundex.encode("Abcdl"), Eq("A123"));
+    ASSERT_THAT(soundex.encode("Abcdlm"), Eq("A123"));
 }
 
 TEST_F(SoundexEncoding, DropVowelLikeLettersBeyondFirst)
 {
-    EXPECT_THAT(soundex.encode("Aar"), Eq("A600"));
-    EXPECT_THAT(soundex.encode("Far"), Eq("F600"));
+    ASSERT_THAT(soundex.encode("Aar"), Eq("A600"));
+    ASSERT_THAT(soundex.encode("Far"), Eq("F600"));
 }
 
 TEST_F(SoundexEncoding, TwoAdjacentConsonantsWithSameEncodingAreElided)
 {
-    EXPECT_THAT(soundex.encode("Agg"), Eq("A200"));
-    EXPECT_THAT(soundex.encode("Arr"), Eq("A600"));
+    ASSERT_THAT(soundex.encode("Agg"), Eq("A200"));
+    ASSERT_THAT(soundex.encode("Arr"), Eq("A600"));
 }
 
 TEST_F(SoundexEncoding, TwoAdjacentConsonantsWithSameEncodingAreElidedEvenWhenIntial)
 {
-    EXPECT_THAT(soundex.encode("Pfister"), Eq("P236"));
+    ASSERT_THAT(soundex.encode("Pfister"), Eq("P236"));
 
 }
 
 TEST_F(SoundexEncoding, ThreeAdjacentConsonantsWithSameEncodingAreElided)
 {
-    EXPECT_THAT(soundex.encode("Arrr"), Eq("A600"));
-    EXPECT_THAT(soundex.encode("Acks"), Eq("A200"));
+    ASSERT_THAT(soundex.encode("Arrr"), Eq("A600"));
+    ASSERT_THAT(soundex.encode("Acks"), Eq("A200"));
 }
 
 TEST_F(SoundexEncoding, TwoConsonantsSeparatedByVowelAreNotElided)
@@ -97,19 +97,41 @@ TEST_F(SoundexEncoding, TwoConsonantsSeparatedBy_H_Or_W_AreElided)
 
 TEST_F(SoundexEncoding, TwoConsonantsSeparatedBy_H_Or_W_AreElidedIncludingInitial)
 {
-    EXPECT_THAT(soundex.encode("Ghg"), Eq("G000"));
-    EXPECT_THAT(soundex.encode("Cwc"), Eq("C000"));
+    ASSERT_THAT(soundex.encode("Ghg"), Eq("G000"));
+    ASSERT_THAT(soundex.encode("Cwc"), Eq("C000"));
 }
 
 
 TEST_F(SoundexEncoding, Examples)
 {
-    EXPECT_THAT(soundex.encode("Robert"), Eq("R163"));
-    EXPECT_THAT(soundex.encode("Rupert"), Eq("R163"));
+    ASSERT_THAT(soundex.encode("Robert"), Eq("R163"));
+    ASSERT_THAT(soundex.encode("Rupert"), Eq("R163"));
 }
 
 
 TEST_F(SoundexEncoding, EmptyStringEncodesAsEmptyString)
 {
-    EXPECT_THAT(soundex.encode(""), Eq(""));
+    ASSERT_THAT(soundex.encode(""), Eq(""));
+}
+
+TEST_F(SoundexEncoding, SoleNonAlphabeticalCharactersAreIgnored)
+{
+    ASSERT_THAT(soundex.encode("-"), Eq(""));
+    ASSERT_THAT(soundex.encode("*"), Eq(""));
+    ASSERT_THAT(soundex.encode("!!!"), Eq(""));
+}
+
+TEST_F(SoundexEncoding, InitialNonAlphabeticalCharactersAreIgnored)
+{
+    ASSERT_THAT(soundex.encode("-Robert"), Eq("R163"));
+    ASSERT_THAT(soundex.encode("*Rupert"), Eq("R163"));
+    ASSERT_THAT(soundex.encode("!!!Rupert"), Eq("R163"));
+}
+
+TEST_F(SoundexEncoding, OtherNonAlphabeticalCharactersAreIgnored)
+{
+    ASSERT_THAT(soundex.encode("ONeill"), Eq("O540"));
+    ASSERT_THAT(soundex.encode("O'Neil"), Eq("O540"));
+    ASSERT_THAT(soundex.encode("O'''Neil"), Eq("O540"));
+    ASSERT_THAT(soundex.encode("Smith-Jones"), Eq("S532"));
 }
