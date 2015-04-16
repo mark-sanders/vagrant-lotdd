@@ -11,6 +11,18 @@ private:
 
     static const size_t MAX_CODE_LENGTH { 4 };
 
+    std::string head(const std::string& word) const {
+        return word.substr(0, 1);
+    }
+
+    std::string encodeDigits(const std::string& word) const {
+        if (word.length() > 1) {
+            return encodeDigit(word[1]);
+        } else {
+            return "";
+        }
+    }
+
     //  Replace consonants with digits as follows (after the first letter):
     //  - b, f, p, v => 1
     //  - c, g, j, k, q, s, x, z => 2
@@ -26,18 +38,6 @@ private:
         { 'm', "5" }, { 'n', "5" },
         { 'r', "6" },
     };
-
-    std::string head(const std::string& word) const {
-        return word.substr(0, 1);
-    }
-
-    std::string encodeDigits(const std::string& word) const {
-        if (word.length() > 1) {
-            return encodeDigit(word[1]);
-        } else {
-            return "";
-        }
-    }
 
     std::string encodeDigit(char letter) const {
         auto it = charToDigitMap.find(letter);
